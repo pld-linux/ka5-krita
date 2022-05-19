@@ -8,7 +8,7 @@
 Summary:	A digital painting application
 Name:		ka5-krita
 Version:	5.0.2
-Release:	1
+Release:	2
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
@@ -113,6 +113,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__sed} -i -e 's|!/usr/bin/env python3|!/usr/bin/python3|' $RPM_BUILD_ROOT%{_bindir}/AppImageUpdateDummy
 
+%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/x-test
+
 %find_lang %{orgname} --all-name --with-kde
 
 %clean
@@ -143,15 +145,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/kis_qmic_plugin_interface.h
 %{_includedir}/kritaqmicinterface_export.h
 %dir %{_libdir}/krita-python-libs
+%dir %{_libdir}/krita-python-libs/PyKrita
 %{_libdir}/krita-python-libs/PyKrita/krita.so
 %{_libdir}/krita-python-libs/krita/__init__.py
+%dir %{_libdir}/krita-python-libs/krita
 %{_libdir}/krita-python-libs/krita/api.py
+%dir %{_libdir}/krita-python-libs/krita/attic
 %{_libdir}/krita-python-libs/krita/attic/mikro.py
 %{_libdir}/krita-python-libs/krita/attic/scripter_hooks.py
 %{_libdir}/krita-python-libs/krita/decorators.py
 %{_libdir}/krita-python-libs/krita/dockwidgetfactory.py
 %{_libdir}/krita-python-libs/krita/excepthook.py
 %{_libdir}/krita-python-libs/krita/excepthook_ui.py
+%dir %{_libdir}/krita-python-libs/krita/sceditor
 %{_libdir}/krita-python-libs/krita/sceditor/__init__.py
 %{_libdir}/krita-python-libs/krita/sceditor/assist.py
 %{_libdir}/krita-python-libs/krita/sceditor/console.py
