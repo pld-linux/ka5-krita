@@ -7,14 +7,15 @@
 
 Summary:	A digital painting application
 Name:		ka5-krita
-Version:	5.0.2
-Release:	3
+Version:	5.1.1
+Release:	1
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
-# Source0-md5:	77e0bb49a297c0bc123d19fbd0683c33
+# Source0-md5:	7edb846ad3688e09cb494a63f7def6e6
 URL:		https://www.krita.org/
 BuildRequires:	OpenColorIO-devel
+BuildRequires:	OpenEXR-devel
 BuildRequires:	Qt5Concurrent-devel
 BuildRequires:	Qt5Core-devel >= 5.15.2
 BuildRequires:	Qt5DBus-devel >= 5.9.0
@@ -62,7 +63,6 @@ BuildRequires:	ninja
 BuildRequires:	openjpeg2-devel >= 2.3.0
 BuildRequires:	pkgconfig
 BuildRequires:	poppler-qt5-devel
-BuildRequires:	python-sip-devel
 BuildRequires:	python3-PyQt5 >= 5.6.0
 BuildRequires:	python3-devel
 BuildRequires:	quazip-qt5-devel
@@ -208,6 +208,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kritaplugins/kritaedgedetection.so
 %{_libdir}/kritaplugins/kritaembossfilter.so
 %{_libdir}/kritaplugins/kritaexample.so
+%{_libdir}/kritaplugins/kritaexif.so
 %{_libdir}/kritaplugins/kritaexperimentpaintop.so
 %{_libdir}/kritaplugins/kritaexrexport.so
 %{_libdir}/kritaplugins/kritaexrimport.so
@@ -234,6 +235,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kritaplugins/kritaimageenhancement.so
 %{_libdir}/kritaplugins/kritaimagesplit.so
 %{_libdir}/kritaplugins/kritaindexcolors.so
+%{_libdir}/kritaplugins/kritaiptc.so
 %{_libdir}/kritaplugins/kritajp2import.so
 %{_libdir}/kritaplugins/kritajpegexport.so
 %{_libdir}/kritaplugins/kritajpegimport.so
@@ -310,6 +312,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kritaplugins/kritatoolSmartPatch.so
 %{_libdir}/kritaplugins/kritatoolcrop.so
 %{_libdir}/kritaplugins/kritatooldyna.so
+%{_libdir}/kritaplugins/kritatoolencloseandfill.so
 %{_libdir}/kritaplugins/kritatoollazybrush.so
 %{_libdir}/kritaplugins/kritatoolpolygon.so
 %{_libdir}/kritaplugins/kritatoolpolyline.so
@@ -321,80 +324,87 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kritaplugins/kritawebpexport.so
 %{_libdir}/kritaplugins/kritawebpimport.so
 %{_libdir}/kritaplugins/kritaxcfimport.so
+%{_libdir}/kritaplugins/kritaxmp.so
 %{_libdir}/libkritabasicflakes.so
-%ghost %{_libdir}/libkritabasicflakes.so.17
+%ghost %{_libdir}/libkritabasicflakes.so.18
 %{_libdir}/libkritabasicflakes.so.*.*.*
 %{_libdir}/libkritacolor.so
-%ghost %{_libdir}/libkritacolor.so.17
+%ghost %{_libdir}/libkritacolor.so.18
 %{_libdir}/libkritacolor.so.*.*.*
 %{_libdir}/libkritacolord.so
-%ghost %{_libdir}/libkritacolord.so.17
+%ghost %{_libdir}/libkritacolord.so.18
 %{_libdir}/libkritacolord.so.*.*.*
 %{_libdir}/libkritacommand.so
-%ghost %{_libdir}/libkritacommand.so.17
+%ghost %{_libdir}/libkritacommand.so.18
 %{_libdir}/libkritacommand.so.*.*.*
 %{_libdir}/libkritaflake.so
-%ghost %{_libdir}/libkritaflake.so.17
+%ghost %{_libdir}/libkritaflake.so.18
 %{_libdir}/libkritaflake.so.*.*.*
 %{_libdir}/libkritaglobal.so
-%ghost %{_libdir}/libkritaglobal.so.17
+%ghost %{_libdir}/libkritaglobal.so.18
 %{_libdir}/libkritaglobal.so.*.*.*
 %{_libdir}/libkritaimage.so
-%ghost %{_libdir}/libkritaimage.so.17
+%ghost %{_libdir}/libkritaimage.so.18
 %{_libdir}/libkritaimage.so.*.*.*
 %{_libdir}/libkritaimpex.so
-%ghost %{_libdir}/libkritaimpex.so.17
+%ghost %{_libdir}/libkritaimpex.so.18
 %{_libdir}/libkritaimpex.so.*.*.*
 %{_libdir}/libkritalibbrush.so
-%ghost %{_libdir}/libkritalibbrush.so.17
+%ghost %{_libdir}/libkritalibbrush.so.18
 %{_libdir}/libkritalibbrush.so.*.*.*
 %{_libdir}/libkritalibkis.so
-%ghost %{_libdir}/libkritalibkis.so.17
+%ghost %{_libdir}/libkritalibkis.so.18
 %{_libdir}/libkritalibkis.so.*.*.*
 %{_libdir}/libkritalibkra.so
-%ghost %{_libdir}/libkritalibkra.so.17
+%ghost %{_libdir}/libkritalibkra.so.18
 %{_libdir}/libkritalibkra.so.*.*.*
 %{_libdir}/libkritalibpaintop.so
-%ghost %{_libdir}/libkritalibpaintop.so.17
+%ghost %{_libdir}/libkritalibpaintop.so.18
 %{_libdir}/libkritalibpaintop.so.*.*.*
 %{_libdir}/libkritametadata.so
-%ghost %{_libdir}/libkritametadata.so.17
+%ghost %{_libdir}/libkritametadata.so.18
 %{_libdir}/libkritametadata.so.*.*.*
 %{_libdir}/libkritapigment.so
-%ghost %{_libdir}/libkritapigment.so.17
+%ghost %{_libdir}/libkritapigment.so.18
 %{_libdir}/libkritapigment.so.*.*.*
 %{_libdir}/libkritaplugin.so
-%ghost %{_libdir}/libkritaplugin.so.17
+%ghost %{_libdir}/libkritaplugin.so.18
 %{_libdir}/libkritaplugin.so.*.*.*
 %{_libdir}/libkritapsd.so
-%ghost %{_libdir}/libkritapsd.so.17
+%ghost %{_libdir}/libkritapsd.so.18
 %{_libdir}/libkritapsd.so.*.*.*
+%{_libdir}/libkritapsdutils.so
+%ghost %{_libdir}/libkritapsdutils.so.18
+%{_libdir}/libkritapsdutils.so.*.*.*
 %{_libdir}/libkritaqmicinterface.so
-%ghost %{_libdir}/libkritaqmicinterface.so.17
+%ghost %{_libdir}/libkritaqmicinterface.so.18
 %{_libdir}/libkritaqmicinterface.so.*.*.*
 %{_libdir}/libkritaqml.so
-%ghost %{_libdir}/libkritaqml.so.17
+%ghost %{_libdir}/libkritaqml.so.18
 %{_libdir}/libkritaqml.so.*.*.*
 %{_libdir}/libkritaresources.so
-%ghost %{_libdir}/libkritaresources.so.17
+%ghost %{_libdir}/libkritaresources.so.18
 %{_libdir}/libkritaresources.so.*.*.*
 %{_libdir}/libkritaresourcewidgets.so
-%ghost %{_libdir}/libkritaresourcewidgets.so.17
+%ghost %{_libdir}/libkritaresourcewidgets.so.18
 %{_libdir}/libkritaresourcewidgets.so.*.*.*
 %{_libdir}/libkritastore.so
-%ghost %{_libdir}/libkritastore.so.17
+%ghost %{_libdir}/libkritastore.so.18
 %{_libdir}/libkritastore.so.*.*.*
+%{_libdir}/libkritatiffpsd.so
+%ghost %{_libdir}/libkritatiffpsd.so.18
+%{_libdir}/libkritatiffpsd.so.*.*.*
 %{_libdir}/libkritaui.so
-%ghost %{_libdir}/libkritaui.so.17
+%ghost %{_libdir}/libkritaui.so.18
 %{_libdir}/libkritaui.so.*.*.*
 %{_libdir}/libkritaversion.so
-%ghost %{_libdir}/libkritaversion.so.17
+%ghost %{_libdir}/libkritaversion.so.18
 %{_libdir}/libkritaversion.so.*.*.*
 %{_libdir}/libkritawidgets.so
-%ghost %{_libdir}/libkritawidgets.so.17
+%ghost %{_libdir}/libkritawidgets.so.18
 %{_libdir}/libkritawidgets.so.*.*.*
 %{_libdir}/libkritawidgetutils.so
-%ghost %{_libdir}/libkritawidgetutils.so.17
+%ghost %{_libdir}/libkritawidgetutils.so.18
 %{_libdir}/libkritawidgetutils.so.*.*.*
 %dir %{_libdir}/qt5/qml/org/krita
 %dir %{_libdir}/qt5/qml/org/krita/draganddrop
@@ -464,6 +474,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/color-schemes/KritaBlender.colors
 %{_datadir}/color-schemes/KritaBright.colors
 %{_datadir}/color-schemes/KritaDark.colors
+%{_datadir}/color-schemes/KritaDarkOrange.colors
 %{_datadir}/color-schemes/KritaDarker.colors
 %{_datadir}/color-schemes/KritaNeutral.colors
 %{_datadir}/color/icc/krita
