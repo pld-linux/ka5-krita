@@ -7,12 +7,12 @@
 
 Summary:	A digital painting application
 Name:		ka5-krita
-Version:	5.1.2
+Version:	5.1.3
 Release:	1
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
-# Source0-md5:	f89ab0c81d99bd7f48ebac66e99c767f
+# Source0-md5:	6f141f35282a05067693f4bc2eb1cb80
 URL:		https://www.krita.org/
 BuildRequires:	OpenColorIO-devel
 BuildRequires:	OpenEXR-devel
