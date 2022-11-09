@@ -104,6 +104,11 @@ cd build
 	-G Ninja \
 	-DHTML_INSTALL_DIR=%{_kdedocdir} \
 	-DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+	-DENABLE_UPDATERS=OFF \
+	-DFETCH_TRANSLATIONS=OFF \
+	-DKRITA_ENABLE_PCH=OFF \
+	-DCMAKE_DISABLE_FIND_PACKAGE_KSeExpr=ON \
+	-DCMAKE_DISABLE_FIND_PACKAGE_xsimd=ON \
 	..
 %ninja_build
 
@@ -111,7 +116,7 @@ cd build
 rm -rf $RPM_BUILD_ROOT
 %ninja_install -C build
 
-%{__sed} -i -e 's|!/usr/bin/env python3|!/usr/bin/python3|' $RPM_BUILD_ROOT%{_bindir}/AppImageUpdateDummy
+#%{__sed} -i -e 's|!/usr/bin/env python3|!/usr/bin/python3|' $RPM_BUILD_ROOT%{_bindir}/AppImageUpdateDummy
 
 %{__rm} -r $RPM_BUILD_ROOT%{_localedir}/x-test
 
@@ -137,7 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 /etc/xdg/kritarc
-%attr(755,root,root) %{_bindir}/AppImageUpdateDummy
+#%attr(755,root,root) %{_bindir}/AppImageUpdateDummy
 %attr(755,root,root) %{_bindir}/krita
 %attr(755,root,root) %{_bindir}/krita_version
 %attr(755,root,root) %{_bindir}/kritarunner
