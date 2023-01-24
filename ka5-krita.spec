@@ -7,12 +7,12 @@
 
 Summary:	A digital painting application
 Name:		ka5-krita
-Version:	5.1.3
+Version:	5.1.5
 Release:	1
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
-# Source0-md5:	6f141f35282a05067693f4bc2eb1cb80
+# Source0-md5:	ad84f643ff5dea6e8bbf34cc3c904c83
 URL:		https://www.krita.org/
 BuildRequires:	OpenColorIO-devel
 BuildRequires:	OpenEXR-devel
@@ -117,8 +117,6 @@ rm -rf $RPM_BUILD_ROOT
 %ninja_install -C build
 
 #%{__sed} -i -e 's|!/usr/bin/env python3|!/usr/bin/python3|' $RPM_BUILD_ROOT%{_bindir}/AppImageUpdateDummy
-
-%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/x-test
 
 %find_lang %{orgname} --all-name --with-kde
 
@@ -342,6 +340,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libkritacommand.so
 %ghost %{_libdir}/libkritacommand.so.18
 %{_libdir}/libkritacommand.so.*.*.*
+%{_libdir}/libkritaexifcommon.so
+%ghost %{_libdir}/libkritaexifcommon.so.18
+%{_libdir}/libkritaexifcommon.so.*.*.*
 %{_libdir}/libkritaflake.so
 %ghost %{_libdir}/libkritaflake.so.18
 %{_libdir}/libkritaflake.so.*.*.*
