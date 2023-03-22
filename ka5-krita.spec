@@ -8,7 +8,7 @@
 Summary:	A digital painting application
 Name:		ka5-krita
 Version:	5.1.5
-Release:	1
+Release:	2
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
