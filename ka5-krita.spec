@@ -1,11 +1,9 @@
-#
-# Conditional build:
-#
 %define		_state		stable
 %define		qtver		5.5.1
 %define		orgname		krita
 
 Summary:	A digital painting application
+Summary(pl.UTF-8):	Aplikacja do rysunków cyfrowych
 Name:		ka5-krita
 Version:	5.1.5
 Release:	3
@@ -79,20 +77,26 @@ for artists who want to create professional work from start to end.
 Krita is used by comic book artists, illustrators, concept artists,
 matte and texture painters and in the digital VFX industry.
 
+%description -l pl.UTF-8
+Krita to wolnodostępna, mająca otwarte źródła aplikacja do rysunków
+cyfrowych. Jest przeznaczona dla artystów, chcących tworzyć
+profesjonalne prace od początku do końca. Jest używana przez autorów
+komiksów, ilustratorów, artystów koncepcyjnych, rysujących maty i
+tekstury oraz w cyfrowym przemyśle VFX.
+
 %package data
-Summary:	Data files for %{kaname}
-Summary(pl.UTF-8):	Dane dla %{kaname}
-Group:		X11/Applications/Games
+Summary:	Data files for Krita application
+Summary(pl.UTF-8):	Dane dla aplikacji Krita
+Group:		X11/Applications/Graphics
 BuildArch:	noarch
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	shared-mime-info
 
 %description data
-Data files for %{kaname}.
+Data files for Krita application.
 
 %description data -l pl.UTF-8
-Dane dla %{kaname}.
-
+Dane dla aplikacji Krita.
 
 %prep
 %setup -q -n %{orgname}-%{version}
