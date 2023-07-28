@@ -1,37 +1,39 @@
 %define		_state		stable
-%define		qtver		5.5.1
+%define		qt_ver		5.12.0
+%define		kf_ver		5.44.0
 %define		orgname		krita
 
 Summary:	A digital painting application
 Summary(pl.UTF-8):	Aplikacja do rysunków cyfrowych
 Name:		ka5-krita
 Version:	5.1.5
-Release:	3
+Release:	4
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
 # Source0-md5:	ad84f643ff5dea6e8bbf34cc3c904c83
+Patch0:		krita-exiv2.patch
 URL:		https://www.krita.org/
-BuildRequires:	OpenColorIO-devel
+BuildRequires:	OpenColorIO-devel >= 1.1.1
 BuildRequires:	OpenEXR-devel
-BuildRequires:	Qt5Concurrent-devel
-BuildRequires:	Qt5Core-devel >= 5.15.2
-BuildRequires:	Qt5DBus-devel >= 5.9.0
-BuildRequires:	Qt5Gui-devel
-BuildRequires:	Qt5Multimedia-devel
-BuildRequires:	Qt5Multimedia-devel >= 5.9.0
-BuildRequires:	Qt5Network-devel
-BuildRequires:	Qt5PrintSupport-devel
-BuildRequires:	Qt5Qml-devel >= 5.15.2
-BuildRequires:	Qt5Quick-devel >= 5.9.0
-BuildRequires:	Qt5Sql-devel
-BuildRequires:	Qt5Svg-devel
-BuildRequires:	Qt5Test-devel
-BuildRequires:	Qt5Widgets-devel
-BuildRequires:	Qt5X11Extras-devel
-BuildRequires:	Qt5Xml-devel
+BuildRequires:	Qt5Concurrent-devel >= %{qt_ver}
+BuildRequires:	Qt5Core-devel >= %{qt_ver}
+BuildRequires:	Qt5DBus-devel >= %{qt_ver}
+BuildRequires:	Qt5Gui-devel >= %{qt_ver}
+BuildRequires:	Qt5Multimedia-devel >= %{qt_ver}
+BuildRequires:	Qt5Multimedia-devel >= %{qt_ver}
+BuildRequires:	Qt5Network-devel >= %{qt_ver}
+BuildRequires:	Qt5PrintSupport-devel >= %{qt_ver}
+BuildRequires:	Qt5Qml-devel >= %{qt_ver}
+BuildRequires:	Qt5Quick-devel >= %{qt_ver}
+BuildRequires:	Qt5Sql-devel >= %{qt_ver}
+BuildRequires:	Qt5Svg-devel >= %{qt_ver}
+BuildRequires:	Qt5Test-devel >= %{qt_ver}
+BuildRequires:	Qt5Widgets-devel >= %{qt_ver}
+BuildRequires:	Qt5X11Extras-devel >= %{qt_ver}
+BuildRequires:	Qt5Xml-devel >= %{qt_ver}
 BuildRequires:	boost-devel >= 1.55
-BuildRequires:	cmake >= 2.8.9
+BuildRequires:	cmake >= 3.16
 BuildRequires:	eigen3 >= 3.0
 BuildRequires:	exiv2-devel >= 0.16
 BuildRequires:	fftw3-devel
@@ -39,22 +41,24 @@ BuildRequires:	gettext-devel
 BuildRequires:	giflib-devel
 BuildRequires:	gsl-devel
 BuildRequires:	kf5-extra-cmake-modules >= 5.22
-BuildRequires:	kf5-kcompletion-devel >= 5.44.0
-BuildRequires:	kf5-kconfig-devel >= 5.44.0
-BuildRequires:	kf5-kcoreaddons-devel >= 5.44.0
-BuildRequires:	kf5-kcrash-devel >= 5.44.0
-BuildRequires:	kf5-kguiaddons-devel >= 5.44.0
+BuildRequires:	kf5-kcompletion-devel >= %{kf_ver}
+BuildRequires:	kf5-kconfig-devel >= %{kf_ver}
+BuildRequires:	kf5-kcoreaddons-devel >= %{kf_ver}
+BuildRequires:	kf5-kcrash-devel >= %{kf_ver}
+BuildRequires:	kf5-kguiaddons-devel >= %{kf_ver}
 BuildRequires:	kf5-ki18n-devel
-BuildRequires:	kf5-kitemmodels-devel >= 5.44.0
-BuildRequires:	kf5-kitemviews-devel >= 5.44.0
-BuildRequires:	kf5-kwidgetsaddons-devel >= 5.44.0
-BuildRequires:	kf5-kwindowsystem-devel >= 5.44.0
+BuildRequires:	kf5-kitemmodels-devel >= %{kf_ver}
+BuildRequires:	kf5-kitemviews-devel >= %{kf_ver}
+BuildRequires:	kf5-kwidgetsaddons-devel >= %{kf_ver}
+BuildRequires:	kf5-kwindowsystem-devel >= %{kf_ver}
 BuildRequires:	lcms2-devel >= 2.4
-BuildRequires:	libheif-devel >= 1.10.0
-BuildRequires:	libjpeg-turbo-devel
-BuildRequires:	libmypaint-devel
+BuildRequires:	libheif-devel >= 1.11.0
+BuildRequires:	libjpeg-turbo-devel >= 2.1.3
+BuildRequires:	libjxl-devel >= 0.7.0
+BuildRequires:	libmypaint-devel >= 1.4.0
 BuildRequires:	libpng-devel
 BuildRequires:	libraw-devel >= 0.16
+BuildRequires:	libstdc++-devel >= 6:5
 BuildRequires:	libtiff-devel
 BuildRequires:	libwebp-devel >= 1.2.0
 BuildRequires:	ninja
@@ -62,10 +66,11 @@ BuildRequires:	openjpeg2-devel >= 2.3.0
 BuildRequires:	pkgconfig
 BuildRequires:	poppler-qt5-devel
 BuildRequires:	python3-PyQt5 >= 5.6.0
-BuildRequires:	python3-devel
-BuildRequires:	quazip-qt5-devel
-BuildRequires:	sip-PyQt5
+BuildRequires:	python3-devel >= 1:3.2
+BuildRequires:	quazip-qt5-devel >= 0.6
+BuildRequires:	sip-PyQt5 >= 4.19.13
 BuildRequires:	xorg-lib-libX11-devel
+BuildRequires:	xsimd-devel >= 8.1.0
 BuildRequires:	xz
 BuildRequires:	zlib-devel
 Requires:	%{name}-data = %{version}-%{release}
@@ -112,11 +117,10 @@ Dane dla aplikacji Krita.
 
 %prep
 %setup -q -n %{orgname}-%{version}
+%patch0 -p1
 
 %build
-install -d build
-cd build
-%cmake \
+%cmake -B build \
 	-G Ninja \
 	-DHTML_INSTALL_DIR=%{_kdedocdir} \
 	-DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
@@ -124,15 +128,14 @@ cd build
 	-DFETCH_TRANSLATIONS=OFF \
 	-DKRITA_ENABLE_PCH=OFF \
 	-DCMAKE_DISABLE_FIND_PACKAGE_KSeExpr=ON \
-	-DCMAKE_DISABLE_FIND_PACKAGE_xsimd=ON \
-	..
-%ninja_build
+	-DCMAKE_DISABLE_FIND_PACKAGE_xsimd=ON
+
+%ninja_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%ninja_install -C build
 
-#%{__sed} -i -e 's|!/usr/bin/env python3|!/usr/bin/python3|' $RPM_BUILD_ROOT%{_bindir}/AppImageUpdateDummy
+%ninja_install -C build
 
 %find_lang %{orgname} --all-name --with-kde
 
@@ -153,7 +156,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 /etc/xdg/kritarc
-#%attr(755,root,root) %{_bindir}/AppImageUpdateDummy
 %attr(755,root,root) %{_bindir}/krita
 %attr(755,root,root) %{_bindir}/krita_version
 %attr(755,root,root) %{_bindir}/kritarunner
@@ -288,6 +290,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kritaplugins/kritajp2import.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritajpegexport.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritajpegimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritajxlexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritajxlimport.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritakraexport.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritakraimport.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritakrzexport.so
@@ -379,7 +383,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/qt5/qml/org/krita/draganddrop/libdraganddropplugin.so
 %{_libdir}/qt5/qml/org/krita/draganddrop/qmldir
 %dir %{_libdir}/qt5/qml/org/krita/sketch
-%{_libdir}/qt5/qml/org/krita/sketch/components
+%dir %{_libdir}/qt5/qml/org/krita/sketch/components
+%{_libdir}/qt5/qml/org/krita/sketch/components/*.js
 %{_libdir}/qt5/qml/org/krita/sketch/components/*.qml
 %{_libdir}/qt5/qml/org/krita/sketch/components/qmldir
 %attr(755,root,root) %{_libdir}/qt5/qml/org/krita/sketch/libkritasketchplugin.so
@@ -429,6 +434,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/krita_heightmap.desktop
 %{_desktopdir}/krita_jp2.desktop
 %{_desktopdir}/krita_jpeg.desktop
+%{_desktopdir}/krita_jxl.desktop
 %{_desktopdir}/krita_kra.desktop
 %{_desktopdir}/krita_krz.desktop
 %{_desktopdir}/krita_ora.desktop

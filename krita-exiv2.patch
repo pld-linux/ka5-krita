@@ -1,0 +1,423 @@
+--- krita-5.1.5/plugins/metadata/common/KisExiv2IODevice.h.orig	2023-01-05 12:21:21.000000000 +0100
++++ krita-5.1.5/plugins/metadata/common/KisExiv2IODevice.h	2023-07-28 20:55:52.067163352 +0200
+@@ -18,21 +18,37 @@
+ class KRITAEXIFCOMMON_EXPORT KisExiv2IODevice : public Exiv2::BasicIo
+ {
+ public:
++#if EXIV2_TEST_VERSION (0,28,0)
++    using ptr_type = Exiv2::BasicIo::UniquePtr;
++#else
+     using ptr_type = Exiv2::BasicIo::AutoPtr;
++#endif
+ 
+     KisExiv2IODevice(QString path);
+     ~KisExiv2IODevice() override;
+ 
+     int open() override;
+     int close() override;
++#if EXIV2_TEST_VERSION (0,28,0)
++    size_t write(const Exiv2::byte *data, size_t wcount) override;
++    size_t write(Exiv2::BasicIo &src) override;
++    Exiv2::DataBuf read(size_t rcount) override;
++    size_t read(Exiv2::byte *buf, size_t rcount) override;
++    size_t tell() const override;
++    const std::string& path() const noexcept override;
++    void populateFakeData() override {}
++#else
+     long write(const Exiv2::byte *data, long wcount) override;
+     long write(Exiv2::BasicIo &src) override;
+-    int putb(Exiv2::byte data) override;
+     Exiv2::DataBuf read(long rcount) override;
+     long read(Exiv2::byte *buf, long rcount) override;
++    long tell() const override;
++    std::string path() const override;
++#endif
++    int putb(Exiv2::byte data) override;
+     int getb() override;
+     void transfer(BasicIo &src) override;
+-#if defined(_MSC_VER)
++#if defined(_MSC_VER) || EXIV2_TEST_VERSION (0,28,0)
+     int seek(int64_t offset, Position pos) override;
+ #else
+     int seek(long offset, Position pos) override;
+@@ -40,12 +56,10 @@ public:
+ 
+     Exiv2::byte *mmap(bool isWriteable = false) override;
+     int munmap() override;
+-    long tell() const override;
+     size_t size() const override;
+     bool isopen() const override;
+     int error() const override;
+     bool eof() const override;
+-    std::string path() const override;
+ 
+ private:
+     bool open(QFile::OpenMode mode);
+--- krita-5.1.5/plugins/metadata/common/KisExiv2IODevice.cpp.orig	2023-01-05 12:21:21.000000000 +0100
++++ krita-5.1.5/plugins/metadata/common/KisExiv2IODevice.cpp	2023-07-28 14:04:49.160142867 +0200
+@@ -39,7 +39,11 @@ int KisExiv2IODevice::close()
+     return 0;
+ }
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++size_t KisExiv2IODevice::write(const Exiv2::byte *data, size_t wcount)
++#else
+ long KisExiv2IODevice::write(const Exiv2::byte *data, long wcount)
++#endif
+ {
+     if (!m_file.isWritable()) {
+         qWarning() << "KisExiv2IODevice: File not open for writing.";
+@@ -53,7 +57,11 @@ long KisExiv2IODevice::write(const Exiv2
+     return 0;
+ }
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++size_t KisExiv2IODevice::write(Exiv2::BasicIo &src)
++#else
+ long KisExiv2IODevice::write(Exiv2::BasicIo &src)
++#endif
+ {
+     if (static_cast<BasicIo *>(this) == &src) {
+         return 0;
+@@ -66,8 +74,13 @@ long KisExiv2IODevice::write(Exiv2::Basi
+         return 0;
+     }
+     Exiv2::byte buffer[4096];
++#if EXIV2_TEST_VERSION (0,28,0)
+     long readCount = 0;
+     long totalWriteCount = 0;
++#else
++    size_t readCount = 0;
++    size_t totalWriteCount = 0;
++#endif
+     while ((readCount = src.read(buffer, sizeof(buffer))) != 0) {
+         totalWriteCount += write(buffer, readCount);
+     }
+@@ -88,15 +101,23 @@ int KisExiv2IODevice::putb(Exiv2::byte d
+     }
+ }
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++Exiv2::DataBuf KisExiv2IODevice::read(size_t rcount)
++#else
+ Exiv2::DataBuf KisExiv2IODevice::read(long rcount)
++#endif
+ {
+     Exiv2::DataBuf buf(rcount);
+-    const long readCount = read(buf.pData_, buf.size_);
+-    buf.size_ = readCount;
++    const long readCount = read(buf.data(), buf.size());
++    buf.resize(readCount);
+     return buf;
+ }
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++size_t KisExiv2IODevice::read(Exiv2::byte *buf, size_t rcount)
++#else
+ long KisExiv2IODevice::read(Exiv2::byte *buf, long rcount)
++#endif
+ {
+     const qint64 bytesRead = m_file.read(reinterpret_cast<char *>(buf), rcount);
+     if (bytesRead > 0) {
+@@ -154,7 +175,7 @@ void KisExiv2IODevice::transfer(Exiv2::B
+     }
+ }
+ 
+-#if defined(_MSC_VER)
++#if defined(_MSC_VER) || EXIV2_TEST_VERSION (0,28,0)
+ int KisExiv2IODevice::seek(int64_t offset, Exiv2::BasicIo::Position position)
+ #else
+ int KisExiv2IODevice::seek(long offset, Exiv2::BasicIo::Position position)
+@@ -202,7 +223,11 @@ int KisExiv2IODevice::munmap()
+     return 0;
+ }
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++size_t KisExiv2IODevice::tell() const
++#else
+ long KisExiv2IODevice::tell() const
++#endif
+ {
+     return m_file.pos();
+ }
+@@ -231,10 +256,18 @@ bool KisExiv2IODevice::eof() const
+     return m_file.atEnd();
+ }
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++const std::string& KisExiv2IODevice::path() const noexcept
++{
++    static std::string buf = filePathQString().toStdString();
++    return buf;
++}
++#else
+ std::string KisExiv2IODevice::path() const
+ {
+     return filePathQString().toStdString();
+ }
++#endif
+ 
+ bool KisExiv2IODevice::open(QFile::OpenMode mode)
+ {
+--- krita-5.1.5/plugins/metadata/common/kis_exiv2_common.h.orig	2023-01-05 12:21:21.000000000 +0100
++++ krita-5.1.5/plugins/metadata/common/kis_exiv2_common.h	2023-07-28 14:52:02.672742163 +0200
+@@ -19,7 +19,11 @@
+ 
+ // Convert an exiv value to a KisMetaData value
+ inline KisMetaData::Value
++#if EXIV2_TEST_VERSION (0,28,0)
++exivValueToKMDValue(const Exiv2::Value::UniquePtr value,
++#else
+ exivValueToKMDValue(const Exiv2::Value::AutoPtr value,
++#endif
+                     bool forceSeq,
+                     KisMetaData::Value::ValueType arrayType = KisMetaData::Value::UnorderedArray)
+ {
+@@ -42,11 +46,11 @@ exivValueToKMDValue(const Exiv2::Value::
+     case Exiv2::signedShort:
+     case Exiv2::signedLong: {
+         if (value->count() == 1 && !forceSeq) {
+-            return KisMetaData::Value((int)value->toLong());
++            return KisMetaData::Value((int)value->toInt64());
+         } else {
+             QList<KisMetaData::Value> array;
+             for (int i = 0; i < value->count(); i++)
+-                array.push_back(KisMetaData::Value((int)value->toLong(i)));
++                array.push_back(KisMetaData::Value((int)value->toInt64(i)));
+             return KisMetaData::Value(array, arrayType);
+         }
+     }
+--- krita-5.1.5/plugins/metadata/exif/kis_exif_io.cpp.orig	2023-01-05 12:21:21.000000000 +0100
++++ krita-5.1.5/plugins/metadata/exif/kis_exif_io.cpp	2023-07-28 19:47:39.556883236 +0200
+@@ -31,7 +31,11 @@
+ // ---- Exception conversion functions ---- //
+ 
+ // convert ExifVersion and FlashpixVersion to a KisMetaData value
++#if EXIV2_TEST_VERSION (0,28,0)
++KisMetaData::Value exifVersionToKMDValue(const Exiv2::Value::UniquePtr value)
++#else
+ KisMetaData::Value exifVersionToKMDValue(const Exiv2::Value::AutoPtr value)
++#endif
+ {
+     const Exiv2::DataValue *dvalue = dynamic_cast<const Exiv2::DataValue *>(&*value);
+     if (dvalue) {
+@@ -55,13 +59,17 @@ Exiv2::Value *kmdValueToExifVersion(cons
+ }
+ 
+ // Convert an exif array of integer string to a KisMetaData array of integer
++#if EXIV2_TEST_VERSION (0,28,0)
++KisMetaData::Value exifArrayToKMDIntOrderedArray(const Exiv2::Value::UniquePtr value)
++#else
+ KisMetaData::Value exifArrayToKMDIntOrderedArray(const Exiv2::Value::AutoPtr value)
++#endif
+ {
+     QList<KisMetaData::Value> v;
+     const Exiv2::DataValue *dvalue = dynamic_cast<const Exiv2::DataValue *>(&*value);
+     if (dvalue) {
+         for (long i = 0; i < dvalue->count(); i++) {
+-            v.push_back({(int)dvalue->toLong(i)});
++            v.push_back({(int)dvalue->toInt64(i)});
+         }
+     } else {
+         Q_ASSERT(value->typeId() == Exiv2::asciiString);
+@@ -81,7 +89,11 @@ Exiv2::Value *kmdIntOrderedArrayToExifAr
+     return new Exiv2::DataValue(v.data(), static_cast<long>(v.size()));
+ }
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++QDateTime exivValueToDateTime(const Exiv2::Value::UniquePtr value)
++#else
+ QDateTime exivValueToDateTime(const Exiv2::Value::AutoPtr value)
++#endif
+ {
+     return QDateTime::fromString(value->toString().c_str(), Qt::ISODate);
+ }
+@@ -115,7 +127,11 @@ Exiv2::ByteOrder invertByteOrder(Exiv2::
+     return Exiv2::invalidByteOrder;
+ }
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++KisMetaData::Value exifOECFToKMDOECFStructure(const Exiv2::Value::UniquePtr value, Exiv2::ByteOrder order)
++#else
+ KisMetaData::Value exifOECFToKMDOECFStructure(const Exiv2::Value::AutoPtr value, Exiv2::ByteOrder order)
++#endif
+ {
+     QMap<QString, KisMetaData::Value> oecfStructure;
+     const Exiv2::DataValue *dvalue = dynamic_cast<const Exiv2::DataValue *>(&*value);
+@@ -202,7 +218,11 @@ Exiv2::Value *kmdOECFStructureToExifOECF
+     return new Exiv2::DataValue((const Exiv2::byte *)array.data(), array.size());
+ }
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++KisMetaData::Value deviceSettingDescriptionExifToKMD(const Exiv2::Value::UniquePtr value)
++#else
+ KisMetaData::Value deviceSettingDescriptionExifToKMD(const Exiv2::Value::AutoPtr value)
++#endif
+ {
+     QMap<QString, KisMetaData::Value> deviceSettingStructure;
+     QByteArray array;
+@@ -258,7 +278,11 @@ Exiv2::Value *deviceSettingDescriptionKM
+     return new Exiv2::DataValue((const Exiv2::byte *)array.data(), array.size());
+ }
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++KisMetaData::Value cfaPatternExifToKMD(const Exiv2::Value::UniquePtr value, Exiv2::ByteOrder order)
++#else
+ KisMetaData::Value cfaPatternExifToKMD(const Exiv2::Value::AutoPtr value, Exiv2::ByteOrder order)
++#endif
+ {
+     QMap<QString, KisMetaData::Value> cfaPatternStructure;
+     const Exiv2::DataValue *dvalue = dynamic_cast<const Exiv2::DataValue *>(&*value);
+@@ -310,9 +334,13 @@ Exiv2::Value *cfaPatternKMDToExif(const
+ 
+ // Read and write Flash //
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++KisMetaData::Value flashExifToKMD(const Exiv2::Value::UniquePtr value)
++#else
+ KisMetaData::Value flashExifToKMD(const Exiv2::Value::AutoPtr value)
++#endif
+ {
+-    const uint16_t v = static_cast<uint16_t>(value->toLong());
++    const uint16_t v = static_cast<uint16_t>(value->toInt64());
+     QMap<QString, KisMetaData::Value> flashStructure;
+     bool fired = (v & 0x01); // bit 1 is whether flash was fired or not
+     flashStructure["Fired"] = QVariant(fired);
+@@ -465,7 +493,11 @@ bool KisExifIO::saveTo(KisMetaData::Stor
+                                 << exivKey; // << " of KMD value" << entry.value();
+                 }
+             }
++#if EXIV2_TEST_VERSION(0, 28, 0)
++        } catch (Exiv2::Error &e) {
++#else
+         } catch (Exiv2::AnyError &e) {
++#endif
+             dbgMetaData << "exiv error " << e.what();
+         }
+     }
+--- krita-5.1.5/plugins/metadata/iptc/kis_iptc_io.cpp.orig	2023-01-05 12:21:21.000000000 +0100
++++ krita-5.1.5/plugins/metadata/iptc/kis_iptc_io.cpp	2023-07-28 19:50:08.597734785 +0200
+@@ -110,7 +110,11 @@ bool KisIptcIO::saveTo(KisMetaData::Stor
+                 if (v && v->typeId() != Exiv2::invalidTypeId) {
+                     iptcData.add(iptcKey, v);
+                 }
++#if EXIV2_TEST_VERSION(0, 28, 0)
++            } catch (Exiv2::Error &e) {
++#else
+             } catch (Exiv2::AnyError &e) {
++#endif
+                 dbgMetaData << "exiv error " << e.what();
+             }
+         }
+@@ -128,7 +132,7 @@ bool KisIptcIO::saveTo(KisMetaData::Stor
+         header.append(photoshopBimId_);
+         header.append(photoshopIptc_);
+         header.append(QByteArray(2, 0));
+-        qint32 size = rawData.size_;
++        qint32 size = rawData.size();
+         QByteArray sizeArray(4, 0);
+         sizeArray[0] = (char)((size & 0xff000000) >> 24);
+         sizeArray[1] = (char)((size & 0x00ff0000) >> 16);
+@@ -138,7 +142,7 @@ bool KisIptcIO::saveTo(KisMetaData::Stor
+         ioDevice->write(header);
+     }
+ 
+-    ioDevice->write((const char *)rawData.pData_, rawData.size_);
++    ioDevice->write((const char *)rawData.c_data(), rawData.size());
+     ioDevice->close();
+     return true;
+ }
+--- krita-5.1.5/plugins/metadata/xmp/kis_xmp_io.cpp.orig	2023-01-05 12:21:21.000000000 +0100
++++ krita-5.1.5/plugins/metadata/xmp/kis_xmp_io.cpp	2023-07-28 19:54:26.435874618 +0200
+@@ -248,7 +248,7 @@ bool KisXMPIO::loadFrom(KisMetaData::Sto
+                     Q_ASSERT(schema);
+                 }
+             }
+-            const Exiv2::Value::AutoPtr value = it->getValue();
++            const auto value = it->getValue();
+ 
+             QString structName;
+             int arrayIndex = -1;
+--- krita-5.1.5/plugins/impex/jpeg/kis_jpeg_converter.cc.orig	2023-01-05 12:21:21.000000000 +0100
++++ krita-5.1.5/plugins/impex/jpeg/kis_jpeg_converter.cc	2023-07-28 20:13:37.792433757 +0200
+@@ -20,6 +20,8 @@ extern "C" {
+ }
+ 
+ #include <exiv2/jpgimage.hpp>
++#include <exiv2/photoshop.hpp>
++#include <exiv2/version.hpp>
+ 
+ #include <QFile>
+ #include <QBuffer>
+@@ -375,8 +377,13 @@ KisImportExportErrorCode KisJPEGConverte
+             uint32_t sizeIptc = 0;
+             uint32_t sizeHdr = 0;
+             // Find actual Iptc data within the APP13 segment
+-            if (!Exiv2::Photoshop::locateIptcIrb((Exiv2::byte*)(marker->data + 14),
+-                                                 marker->data_length - 14, &record, &sizeHdr, &sizeIptc)) {
++            if (!Exiv2::Photoshop::locateIptcIrb((Exiv2::byte*)(marker->data + 14), marker->data_length - 14, &record,
++#if EXIV2_TEST_VERSION (0,28,0)
++                                                 sizeHdr, sizeIptc
++#else
++                                                 &sizeHdr, &sizeIptc
++#endif
++             )) {
+                 if (sizeIptc) {
+                     // Decode the IPTC data
+                     QByteArray byteArray((const char*)(record + sizeHdr), sizeIptc);
+--- krita-5.1.5/plugins/impex/tiff/kis_tiff_export.cc.orig	2023-01-05 12:21:21.000000000 +0100
++++ krita-5.1.5/plugins/impex/tiff/kis_tiff_export.cc	2023-07-28 21:48:56.995242908 +0200
+@@ -206,7 +206,11 @@ KisImportExportErrorCode KisTIFFExport::
+         try {
+             KisExiv2IODevice::ptr_type basicIoDevice(new KisExiv2IODevice(filename()));
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++            std::unique_ptr<Exiv2::Image> img(Exiv2::ImageFactory::open(std::move(basicIoDevice)));
++#else
+             const std::unique_ptr<Exiv2::Image> img(Exiv2::ImageFactory::open(basicIoDevice).release());
++#endif
+ 
+             img->readMetadata();
+ 
+@@ -241,8 +245,12 @@ KisImportExportErrorCode KisTIFFExport::
+             }
+             // Write metadata
+             img->writeMetadata();
++#if EXIV2_TEST_VERSION (0,28,0)
++        } catch (Exiv2::Error &e) {
++#else
+         } catch (Exiv2::AnyError &e) {
+-            errFile << "Failed injecting TIFF metadata:" << e.code()
++#endif
++            errFile << "Failed injecting TIFF metadata:" << static_cast<int>(e.code())
+                     << e.what();
+         }
+     }
+--- krita-5.1.5/plugins/impex/tiff/kis_tiff_import.cc.orig	2023-01-05 12:21:21.000000000 +0100
++++ krita-5.1.5/plugins/impex/tiff/kis_tiff_import.cc	2023-07-28 21:50:11.042330662 +0200
+@@ -1840,7 +1840,11 @@ KisTIFFImport::convert(KisDocument *docu
+         try {
+             KisExiv2IODevice::ptr_type basicIoDevice(new KisExiv2IODevice(filename()));
+ 
++#if EXIV2_TEST_VERSION (0,28,0)
++            std::unique_ptr<Exiv2::Image> readImg(Exiv2::ImageFactory::open(std::move(basicIoDevice)));
++#else
+             const std::unique_ptr<Exiv2::Image> readImg(Exiv2::ImageFactory::open(basicIoDevice).release());
++#endif
+ 
+             readImg->readMetadata();
+ 
+@@ -1908,8 +1912,12 @@ KisTIFFImport::convert(KisDocument *docu
+ 
+             // Inject the data as any other IOBackend
+             io->loadFrom(layer->metaData(), &ioDevice);
++#if EXIV2_TEST_VERSION (0,28,0)
++        } catch (Exiv2::Error &e) {
++#else
+         } catch (Exiv2::AnyError &e) {
+-            errFile << "Failed metadata import:" << e.code() << e.what();
++#endif
++            errFile << "Failed metadata import:" << static_cast<int>(e.code()) << e.what();
+         }
+     }
+ 
