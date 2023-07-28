@@ -84,6 +84,18 @@ profesjonalne prace od początku do końca. Jest używana przez autorów
 komiksów, ilustratorów, artystów koncepcyjnych, rysujących maty i
 tekstury oraz w cyfrowym przemyśle VFX.
 
+%package devel
+Summary:	Header files for Krita libraries
+Summary(pl.UTF-8):	Pliki nagłówkowe bibliotek Krity
+Group:		X11/Development/Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description devel
+Header files for Krita libraries.
+
+%description devel -l pl.UTF-8
+Pliki nagłówkowe bibliotek Krity.
+
 %package data
 Summary:	Data files for Krita application
 Summary(pl.UTF-8):	Dane dla aplikacji Krita
@@ -127,11 +139,8 @@ rm -rf $RPM_BUILD_ROOT
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-/sbin/ldconfig
-
-%postun
-/sbin/ldconfig
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %post data
 %update_mime_database
@@ -148,313 +157,267 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/krita
 %attr(755,root,root) %{_bindir}/krita_version
 %attr(755,root,root) %{_bindir}/kritarunner
-%{_includedir}/kis_qmic_interface.h
-%{_includedir}/kis_qmic_plugin_interface.h
-%{_includedir}/kritaqmicinterface_export.h
+%attr(755,root,root) %{_libdir}/libkritabasicflakes.so.*.*.*
+%ghost %{_libdir}/libkritabasicflakes.so.18
+%attr(755,root,root) %{_libdir}/libkritacolor.so.*.*.*
+%ghost %{_libdir}/libkritacolor.so.18
+%attr(755,root,root) %{_libdir}/libkritacolord.so.*.*.*
+%ghost %{_libdir}/libkritacolord.so.18
+%attr(755,root,root) %{_libdir}/libkritacommand.so.*.*.*
+%ghost %{_libdir}/libkritacommand.so.18
+%attr(755,root,root) %{_libdir}/libkritaexifcommon.so.*.*.*
+%ghost %{_libdir}/libkritaexifcommon.so.18
+%attr(755,root,root) %{_libdir}/libkritaflake.so.*.*.*
+%ghost %{_libdir}/libkritaflake.so.18
+%attr(755,root,root) %{_libdir}/libkritaglobal.so.*.*.*
+%ghost %{_libdir}/libkritaglobal.so.18
+%attr(755,root,root) %{_libdir}/libkritaimage.so.*.*.*
+%ghost %{_libdir}/libkritaimage.so.18
+%attr(755,root,root) %{_libdir}/libkritaimpex.so.*.*.*
+%ghost %{_libdir}/libkritaimpex.so.18
+%attr(755,root,root) %{_libdir}/libkritalibbrush.so.*.*.*
+%ghost %{_libdir}/libkritalibbrush.so.18
+%attr(755,root,root) %{_libdir}/libkritalibkis.so.*.*.*
+%ghost %{_libdir}/libkritalibkis.so.18
+%attr(755,root,root) %{_libdir}/libkritalibkra.so.*.*.*
+%ghost %{_libdir}/libkritalibkra.so.18
+%attr(755,root,root) %{_libdir}/libkritalibpaintop.so.*.*.*
+%ghost %{_libdir}/libkritalibpaintop.so.18
+%attr(755,root,root) %{_libdir}/libkritametadata.so.*.*.*
+%ghost %{_libdir}/libkritametadata.so.18
+%attr(755,root,root) %{_libdir}/libkritapigment.so.*.*.*
+%ghost %{_libdir}/libkritapigment.so.18
+%attr(755,root,root) %{_libdir}/libkritaplugin.so.*.*.*
+%ghost %{_libdir}/libkritaplugin.so.18
+%attr(755,root,root) %{_libdir}/libkritapsd.so.*.*.*
+%ghost %{_libdir}/libkritapsd.so.18
+%attr(755,root,root) %{_libdir}/libkritapsdutils.so.*.*.*
+%ghost %{_libdir}/libkritapsdutils.so.18
+%attr(755,root,root) %{_libdir}/libkritaqmicinterface.so.*.*.*
+%ghost %{_libdir}/libkritaqmicinterface.so.18
+%attr(755,root,root) %{_libdir}/libkritaqml.so.*.*.*
+%ghost %{_libdir}/libkritaqml.so.18
+%attr(755,root,root) %{_libdir}/libkritaresources.so.*.*.*
+%ghost %{_libdir}/libkritaresources.so.18
+%attr(755,root,root) %{_libdir}/libkritaresourcewidgets.so.*.*.*
+%ghost %{_libdir}/libkritaresourcewidgets.so.18
+%attr(755,root,root) %{_libdir}/libkritastore.so.*.*.*
+%ghost %{_libdir}/libkritastore.so.18
+%attr(755,root,root) %{_libdir}/libkritatiffpsd.so.*.*.*
+%ghost %{_libdir}/libkritatiffpsd.so.18
+%attr(755,root,root) %{_libdir}/libkritaui.so.*.*.*
+%ghost %{_libdir}/libkritaui.so.18
+%attr(755,root,root) %{_libdir}/libkritaversion.so.*.*.*
+%ghost %{_libdir}/libkritaversion.so.18
+%attr(755,root,root) %{_libdir}/libkritawidgets.so.*.*.*
+%ghost %{_libdir}/libkritawidgets.so.18
+%attr(755,root,root) %{_libdir}/libkritawidgetutils.so.*.*.*
+%ghost %{_libdir}/libkritawidgetutils.so.18
 %dir %{_libdir}/krita-python-libs
 %dir %{_libdir}/krita-python-libs/PyKrita
-%{_libdir}/krita-python-libs/PyKrita/krita.so
-%{_libdir}/krita-python-libs/krita/__init__.py
-%dir %{_libdir}/krita-python-libs/krita
-%{_libdir}/krita-python-libs/krita/api.py
-%dir %{_libdir}/krita-python-libs/krita/attic
-%{_libdir}/krita-python-libs/krita/attic/mikro.py
-%{_libdir}/krita-python-libs/krita/attic/scripter_hooks.py
-%{_libdir}/krita-python-libs/krita/decorators.py
-%{_libdir}/krita-python-libs/krita/dockwidgetfactory.py
-%{_libdir}/krita-python-libs/krita/excepthook.py
-%{_libdir}/krita-python-libs/krita/excepthook_ui.py
-%dir %{_libdir}/krita-python-libs/krita/sceditor
-%{_libdir}/krita-python-libs/krita/sceditor/__init__.py
-%{_libdir}/krita-python-libs/krita/sceditor/assist.py
-%{_libdir}/krita-python-libs/krita/sceditor/console.py
-%{_libdir}/krita-python-libs/krita/sceditor/dockwidget.py
-%{_libdir}/krita-python-libs/krita/sceditor/dockwidget_icons.py
-%{_libdir}/krita-python-libs/krita/sceditor/highlighter.py
-%{_libdir}/krita-python-libs/krita/sceditor/indenter.py
-%{_libdir}/krita-python-libs/krita/sceditor/mainwindow.py
-%{_libdir}/krita-python-libs/krita/sceditor/mainwindow_ui.py
-%{_libdir}/krita-python-libs/krita/sceditor/widget.py
+%attr(755,root,root) %{_libdir}/krita-python-libs/PyKrita/krita.so
+%{_libdir}/krita-python-libs/krita
 %dir %{_libdir}/kritaplugins
-%{_libdir}/kritaplugins/krita_colorspaces_extensions.so
-%{_libdir}/kritaplugins/krita_flaketools.so
-%{_libdir}/kritaplugins/krita_karbontools.so
-%{_libdir}/kritaplugins/krita_raw_import.so
-%{_libdir}/kritaplugins/krita_shape_image.so
-%{_libdir}/kritaplugins/krita_shape_paths.so
-%{_libdir}/kritaplugins/krita_tool_svgtext.so
-%{_libdir}/kritaplugins/kritaanimationdocker.so
-%{_libdir}/kritaplugins/kritaarrangedocker.so
-%{_libdir}/kritaplugins/kritaartisticcolorselector.so
-%{_libdir}/kritaplugins/kritaasccdl.so
-%{_libdir}/kritaplugins/kritaassistanttool.so
-%{_libdir}/kritaplugins/kritablurfilter.so
-%{_libdir}/kritaplugins/kritabrushexport.so
-%{_libdir}/kritaplugins/kritabrushimport.so
-%{_libdir}/kritaplugins/kritabuginfo.so
-%{_libdir}/kritaplugins/kritachanneldocker.so
-%{_libdir}/kritaplugins/kritaclonesarray.so
-%{_libdir}/kritaplugins/kritacolorgenerator.so
-%{_libdir}/kritaplugins/kritacolorrange.so
-%{_libdir}/kritaplugins/kritacolorselectorng.so
-%{_libdir}/kritaplugins/kritacolorsfilters.so
-%{_libdir}/kritaplugins/kritacolorsmudgepaintop.so
-%{_libdir}/kritaplugins/kritacolorspaceconversion.so
-%{_libdir}/kritaplugins/kritacompositiondocker.so
-%{_libdir}/kritaplugins/kritaconvertheighttonormalmap.so
-%{_libdir}/kritaplugins/kritaconvolutionfilters.so
-%{_libdir}/kritaplugins/kritacsvexport.so
-%{_libdir}/kritaplugins/kritacsvimport.so
-%{_libdir}/kritaplugins/kritacurvepaintop.so
-%{_libdir}/kritaplugins/kritadbexplorer.so
-%{_libdir}/kritaplugins/kritadefaultpaintops.so
-%{_libdir}/kritaplugins/kritadefaulttools.so
-%{_libdir}/kritaplugins/kritadeformpaintop.so
-%{_libdir}/kritaplugins/kritadigitalmixer.so
-%{_libdir}/kritaplugins/kritadodgeburn.so
-%{_libdir}/kritaplugins/kritaedgedetection.so
-%{_libdir}/kritaplugins/kritaembossfilter.so
-%{_libdir}/kritaplugins/kritaexample.so
-%{_libdir}/kritaplugins/kritaexif.so
-%{_libdir}/kritaplugins/kritaexperimentpaintop.so
-%{_libdir}/kritaplugins/kritaexrexport.so
-%{_libdir}/kritaplugins/kritaexrimport.so
-%{_libdir}/kritaplugins/kritaextensioncolorsfilters.so
-%{_libdir}/kritaplugins/kritafastcolortransferfilter.so
-%{_libdir}/kritaplugins/kritafilterop.so
-%{_libdir}/kritaplugins/kritagamutmask.so
-%{_libdir}/kritaplugins/kritagaussianhighpassfilter.so
-%{_libdir}/kritaplugins/kritagifexport.so
-%{_libdir}/kritaplugins/kritagifimport.so
-%{_libdir}/kritaplugins/kritagradientgenerator.so
-%{_libdir}/kritaplugins/kritagradientmap.so
-%{_libdir}/kritaplugins/kritagriddocker.so
-%{_libdir}/kritaplugins/kritagridpaintop.so
-%{_libdir}/kritaplugins/kritahairypaintop.so
-%{_libdir}/kritaplugins/kritahalftone.so
-%{_libdir}/kritaplugins/kritahatchingpaintop.so
-%{_libdir}/kritaplugins/kritaheifexport.so
-%{_libdir}/kritaplugins/kritaheifimport.so
-%{_libdir}/kritaplugins/kritaheightmapexport.so
-%{_libdir}/kritaplugins/kritaheightmapimport.so
-%{_libdir}/kritaplugins/kritahistogramdocker.so
-%{_libdir}/kritaplugins/kritahistorydocker.so
-%{_libdir}/kritaplugins/kritaimageenhancement.so
-%{_libdir}/kritaplugins/kritaimagesplit.so
-%{_libdir}/kritaplugins/kritaindexcolors.so
-%{_libdir}/kritaplugins/kritaiptc.so
-%{_libdir}/kritaplugins/kritajp2import.so
-%{_libdir}/kritaplugins/kritajpegexport.so
-%{_libdir}/kritaplugins/kritajpegimport.so
-%{_libdir}/kritaplugins/kritakraexport.so
-%{_libdir}/kritaplugins/kritakraimport.so
-%{_libdir}/kritaplugins/kritakrzexport.so
-%{_libdir}/kritaplugins/kritalayerdocker.so
-%{_libdir}/kritaplugins/kritalayergroupswitcher.so
-%{_libdir}/kritaplugins/kritalayersplit.so
-%{_libdir}/kritaplugins/kritalcmsengine.so
-%{_libdir}/kritaplugins/kritalevelfilter.so
-%{_libdir}/kritaplugins/kritalogdocker.so
-%{_libdir}/kritaplugins/kritalutdocker.so
-%{_libdir}/kritaplugins/kritametadataeditor.so
-%{_libdir}/kritaplugins/kritamodifyselection.so
-%{_libdir}/kritaplugins/kritamultigridpatterngenerator.so
-%{_libdir}/kritaplugins/kritamypaintop.so
-%{_libdir}/kritaplugins/kritanoisefilter.so
-%{_libdir}/kritaplugins/kritanormalize.so
-%{_libdir}/kritaplugins/kritaoffsetimage.so
-%{_libdir}/kritaplugins/kritaoilpaintfilter.so
-%{_libdir}/kritaplugins/kritaoraexport.so
-%{_libdir}/kritaplugins/kritaoraimport.so
-%{_libdir}/kritaplugins/kritaoverviewdocker.so
-%{_libdir}/kritaplugins/kritapalettedocker.so
-%{_libdir}/kritaplugins/kritapalettize.so
-%{_libdir}/kritaplugins/kritaparticlepaintop.so
-%{_libdir}/kritaplugins/kritapatterndocker.so
-%{_libdir}/kritaplugins/kritapatterngenerator.so
-%{_libdir}/kritaplugins/kritapdfimport.so
-%{_libdir}/kritaplugins/kritaphongbumpmap.so
-%{_libdir}/kritaplugins/kritapixelizefilter.so
-%{_libdir}/kritaplugins/kritapngexport.so
-%{_libdir}/kritaplugins/kritapngimport.so
-%{_libdir}/kritaplugins/kritaposterize.so
-%{_libdir}/kritaplugins/kritapresetdocker.so
-%{_libdir}/kritaplugins/kritapresethistory.so
-%{_libdir}/kritaplugins/kritapsdexport.so
-%{_libdir}/kritaplugins/kritapsdimport.so
-%{_libdir}/kritaplugins/kritapykrita.so
-%{_libdir}/kritaplugins/kritaqimageioexport.so
-%{_libdir}/kritaplugins/kritaqimageioimport.so
-%{_libdir}/kritaplugins/kritaqmic.so
-%{_libdir}/kritaplugins/kritaqmlexport.so
-%{_libdir}/kritaplugins/kritaraindropsfilter.so
-%{_libdir}/kritaplugins/kritarandompickfilter.so
-%{_libdir}/kritaplugins/kritarecorderdocker.so
-%{_libdir}/kritaplugins/kritaresourcemanager.so
-%{_libdir}/kritaplugins/kritarotateimage.so
-%{_libdir}/kritaplugins/kritaroundcornersfilter.so
-%{_libdir}/kritaplugins/kritaroundmarkerpaintop.so
-%{_libdir}/kritaplugins/kritascreentonegenerator.so
-%{_libdir}/kritaplugins/kritaselectiontools.so
-%{_libdir}/kritaplugins/kritaseparatechannels.so
-%{_libdir}/kritaplugins/kritashearimage.so
-%{_libdir}/kritaplugins/kritasimplexnoisegenerator.so
-%{_libdir}/kritaplugins/kritasketchpaintop.so
-%{_libdir}/kritaplugins/kritasmallcolorselector.so
-%{_libdir}/kritaplugins/kritasmalltilesfilter.so
-%{_libdir}/kritaplugins/kritasnapshotdocker.so
-%{_libdir}/kritaplugins/kritaspecificcolorselector.so
-%{_libdir}/kritaplugins/kritaspraypaintop.so
-%{_libdir}/kritaplugins/kritaspriterexport.so
-%{_libdir}/kritaplugins/kritastoryboarddocker.so
-%{_libdir}/kritaplugins/kritasvgcollectiondocker.so
-%{_libdir}/kritaplugins/kritasvgimport.so
-%{_libdir}/kritaplugins/kritatangentnormalpaintop.so
-%{_libdir}/kritaplugins/kritatasksetdocker.so
-%{_libdir}/kritaplugins/kritatgaexport.so
-%{_libdir}/kritaplugins/kritatgaimport.so
-%{_libdir}/kritaplugins/kritathreshold.so
-%{_libdir}/kritaplugins/kritatiffexport.so
-%{_libdir}/kritaplugins/kritatiffimport.so
-%{_libdir}/kritaplugins/kritatoolSmartPatch.so
-%{_libdir}/kritaplugins/kritatoolcrop.so
-%{_libdir}/kritaplugins/kritatooldyna.so
-%{_libdir}/kritaplugins/kritatoolencloseandfill.so
-%{_libdir}/kritaplugins/kritatoollazybrush.so
-%{_libdir}/kritaplugins/kritatoolpolygon.so
-%{_libdir}/kritaplugins/kritatoolpolyline.so
-%{_libdir}/kritaplugins/kritatooltransform.so
-%{_libdir}/kritaplugins/kritatouchdocker.so
-%{_libdir}/kritaplugins/kritaunsharpfilter.so
-%{_libdir}/kritaplugins/kritawavefilter.so
-%{_libdir}/kritaplugins/kritawaveletdecompose.so
-%{_libdir}/kritaplugins/kritawebpexport.so
-%{_libdir}/kritaplugins/kritawebpimport.so
-%{_libdir}/kritaplugins/kritaxcfimport.so
-%{_libdir}/kritaplugins/kritaxmp.so
-%{_libdir}/libkritabasicflakes.so
-%ghost %{_libdir}/libkritabasicflakes.so.18
-%{_libdir}/libkritabasicflakes.so.*.*.*
-%{_libdir}/libkritacolor.so
-%ghost %{_libdir}/libkritacolor.so.18
-%{_libdir}/libkritacolor.so.*.*.*
-%{_libdir}/libkritacolord.so
-%ghost %{_libdir}/libkritacolord.so.18
-%{_libdir}/libkritacolord.so.*.*.*
-%{_libdir}/libkritacommand.so
-%ghost %{_libdir}/libkritacommand.so.18
-%{_libdir}/libkritacommand.so.*.*.*
-%{_libdir}/libkritaexifcommon.so
-%ghost %{_libdir}/libkritaexifcommon.so.18
-%{_libdir}/libkritaexifcommon.so.*.*.*
-%{_libdir}/libkritaflake.so
-%ghost %{_libdir}/libkritaflake.so.18
-%{_libdir}/libkritaflake.so.*.*.*
-%{_libdir}/libkritaglobal.so
-%ghost %{_libdir}/libkritaglobal.so.18
-%{_libdir}/libkritaglobal.so.*.*.*
-%{_libdir}/libkritaimage.so
-%ghost %{_libdir}/libkritaimage.so.18
-%{_libdir}/libkritaimage.so.*.*.*
-%{_libdir}/libkritaimpex.so
-%ghost %{_libdir}/libkritaimpex.so.18
-%{_libdir}/libkritaimpex.so.*.*.*
-%{_libdir}/libkritalibbrush.so
-%ghost %{_libdir}/libkritalibbrush.so.18
-%{_libdir}/libkritalibbrush.so.*.*.*
-%{_libdir}/libkritalibkis.so
-%ghost %{_libdir}/libkritalibkis.so.18
-%{_libdir}/libkritalibkis.so.*.*.*
-%{_libdir}/libkritalibkra.so
-%ghost %{_libdir}/libkritalibkra.so.18
-%{_libdir}/libkritalibkra.so.*.*.*
-%{_libdir}/libkritalibpaintop.so
-%ghost %{_libdir}/libkritalibpaintop.so.18
-%{_libdir}/libkritalibpaintop.so.*.*.*
-%{_libdir}/libkritametadata.so
-%ghost %{_libdir}/libkritametadata.so.18
-%{_libdir}/libkritametadata.so.*.*.*
-%{_libdir}/libkritapigment.so
-%ghost %{_libdir}/libkritapigment.so.18
-%{_libdir}/libkritapigment.so.*.*.*
-%{_libdir}/libkritaplugin.so
-%ghost %{_libdir}/libkritaplugin.so.18
-%{_libdir}/libkritaplugin.so.*.*.*
-%{_libdir}/libkritapsd.so
-%ghost %{_libdir}/libkritapsd.so.18
-%{_libdir}/libkritapsd.so.*.*.*
-%{_libdir}/libkritapsdutils.so
-%ghost %{_libdir}/libkritapsdutils.so.18
-%{_libdir}/libkritapsdutils.so.*.*.*
-%{_libdir}/libkritaqmicinterface.so
-%ghost %{_libdir}/libkritaqmicinterface.so.18
-%{_libdir}/libkritaqmicinterface.so.*.*.*
-%{_libdir}/libkritaqml.so
-%ghost %{_libdir}/libkritaqml.so.18
-%{_libdir}/libkritaqml.so.*.*.*
-%{_libdir}/libkritaresources.so
-%ghost %{_libdir}/libkritaresources.so.18
-%{_libdir}/libkritaresources.so.*.*.*
-%{_libdir}/libkritaresourcewidgets.so
-%ghost %{_libdir}/libkritaresourcewidgets.so.18
-%{_libdir}/libkritaresourcewidgets.so.*.*.*
-%{_libdir}/libkritastore.so
-%ghost %{_libdir}/libkritastore.so.18
-%{_libdir}/libkritastore.so.*.*.*
-%{_libdir}/libkritatiffpsd.so
-%ghost %{_libdir}/libkritatiffpsd.so.18
-%{_libdir}/libkritatiffpsd.so.*.*.*
-%{_libdir}/libkritaui.so
-%ghost %{_libdir}/libkritaui.so.18
-%{_libdir}/libkritaui.so.*.*.*
-%{_libdir}/libkritaversion.so
-%ghost %{_libdir}/libkritaversion.so.18
-%{_libdir}/libkritaversion.so.*.*.*
-%{_libdir}/libkritawidgets.so
-%ghost %{_libdir}/libkritawidgets.so.18
-%{_libdir}/libkritawidgets.so.*.*.*
-%{_libdir}/libkritawidgetutils.so
-%ghost %{_libdir}/libkritawidgetutils.so.18
-%{_libdir}/libkritawidgetutils.so.*.*.*
+%attr(755,root,root) %{_libdir}/kritaplugins/krita_colorspaces_extensions.so
+%attr(755,root,root) %{_libdir}/kritaplugins/krita_flaketools.so
+%attr(755,root,root) %{_libdir}/kritaplugins/krita_karbontools.so
+%attr(755,root,root) %{_libdir}/kritaplugins/krita_raw_import.so
+%attr(755,root,root) %{_libdir}/kritaplugins/krita_shape_image.so
+%attr(755,root,root) %{_libdir}/kritaplugins/krita_shape_paths.so
+%attr(755,root,root) %{_libdir}/kritaplugins/krita_tool_svgtext.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaanimationdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaarrangedocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaartisticcolorselector.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaasccdl.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaassistanttool.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritablurfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritabrushexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritabrushimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritabuginfo.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritachanneldocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaclonesarray.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritacolorgenerator.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritacolorrange.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritacolorselectorng.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritacolorsfilters.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritacolorsmudgepaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritacolorspaceconversion.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritacompositiondocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaconvertheighttonormalmap.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaconvolutionfilters.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritacsvexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritacsvimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritacurvepaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritadbexplorer.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritadefaultpaintops.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritadefaulttools.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritadeformpaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritadigitalmixer.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritadodgeburn.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaedgedetection.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaembossfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaexample.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaexif.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaexperimentpaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaexrexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaexrimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaextensioncolorsfilters.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritafastcolortransferfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritafilterop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritagamutmask.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritagaussianhighpassfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritagifexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritagifimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritagradientgenerator.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritagradientmap.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritagriddocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritagridpaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritahairypaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritahalftone.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritahatchingpaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaheifexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaheifimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaheightmapexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaheightmapimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritahistogramdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritahistorydocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaimageenhancement.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaimagesplit.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaindexcolors.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaiptc.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritajp2import.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritajpegexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritajpegimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritakraexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritakraimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritakrzexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritalayerdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritalayergroupswitcher.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritalayersplit.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritalcmsengine.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritalevelfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritalogdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritalutdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritametadataeditor.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritamodifyselection.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritamultigridpatterngenerator.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritamypaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritanoisefilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritanormalize.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaoffsetimage.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaoilpaintfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaoraexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaoraimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaoverviewdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapalettedocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapalettize.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaparticlepaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapatterndocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapatterngenerator.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapdfimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaphongbumpmap.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapixelizefilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapngexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapngimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaposterize.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapresetdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapresethistory.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapsdexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapsdimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritapykrita.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaqimageioexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaqimageioimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaqmic.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaqmlexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaraindropsfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritarandompickfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritarecorderdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaresourcemanager.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritarotateimage.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaroundcornersfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaroundmarkerpaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritascreentonegenerator.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaselectiontools.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaseparatechannels.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritashearimage.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritasimplexnoisegenerator.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritasketchpaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritasmallcolorselector.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritasmalltilesfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritasnapshotdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaspecificcolorselector.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaspraypaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaspriterexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritastoryboarddocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritasvgcollectiondocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritasvgimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatangentnormalpaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatasksetdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatgaexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatgaimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritathreshold.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatiffexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatiffimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatoolSmartPatch.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatoolcrop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatooldyna.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatoolencloseandfill.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatoollazybrush.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatoolpolygon.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatoolpolyline.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatooltransform.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritatouchdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaunsharpfilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritawavefilter.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritawaveletdecompose.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritawebpexport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritawebpimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaxcfimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaxmp.so
 %dir %{_libdir}/qt5/qml/org/krita
 %dir %{_libdir}/qt5/qml/org/krita/draganddrop
 %{_libdir}/qt5/qml/org/krita/draganddrop/libdraganddropplugin.so
 %{_libdir}/qt5/qml/org/krita/draganddrop/qmldir
 %dir %{_libdir}/qt5/qml/org/krita/sketch
-%dir %{_libdir}/qt5/qml/org/krita/sketch/components
-%{_libdir}/qt5/qml/org/krita/sketch/components/BusyIndicator.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/Button.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/ButtonSquared.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/CategorySwitcher.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/CheckBox.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/ColorSwatch.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/Dialog.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/Divider.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/DropShadow.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/ExpandingListView.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/Header.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/Label.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/ListItem.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/MessageStack.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/NewImageList.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/NewsList.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/Page.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/PageStack.js
-%{_libdir}/qt5/qml/org/krita/sketch/components/PageStack.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/PanelTextField.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/RangeCombo.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/RangeInput.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/RecentFilesList.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/ScrollDecorator.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/Shadow.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/Slider.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/TextField.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/TextFieldMultiline.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/Tooltip.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/VirtualKeyboard.qml
+%{_libdir}/qt5/qml/org/krita/sketch/components
+%{_libdir}/qt5/qml/org/krita/sketch/components/*.qml
 %{_libdir}/qt5/qml/org/krita/sketch/components/qmldir
-%{_libdir}/qt5/qml/org/krita/sketch/libkritasketchplugin.so
+%attr(755,root,root) %{_libdir}/qt5/qml/org/krita/sketch/libkritasketchplugin.so
 %{_libdir}/qt5/qml/org/krita/sketch/qmldir
+
+%files devel
+%defattr(644,root,root,755)
+%{_libdir}/libkritabasicflakes.so
+%{_libdir}/libkritacolor.so
+%{_libdir}/libkritacolord.so
+%{_libdir}/libkritacommand.so
+%{_libdir}/libkritaexifcommon.so
+%{_libdir}/libkritaflake.so
+%{_libdir}/libkritaglobal.so
+%{_libdir}/libkritaimage.so
+%{_libdir}/libkritaimpex.so
+%{_libdir}/libkritalibbrush.so
+%{_libdir}/libkritalibkis.so
+%{_libdir}/libkritalibkra.so
+%{_libdir}/libkritalibpaintop.so
+%{_libdir}/libkritametadata.so
+%{_libdir}/libkritapigment.so
+%{_libdir}/libkritaplugin.so
+%{_libdir}/libkritapsd.so
+%{_libdir}/libkritapsdutils.so
+%{_libdir}/libkritaqmicinterface.so
+%{_libdir}/libkritaqml.so
+%{_libdir}/libkritaresources.so
+%{_libdir}/libkritaresourcewidgets.so
+%{_libdir}/libkritastore.so
+%{_libdir}/libkritatiffpsd.so
+%{_libdir}/libkritaui.so
+%{_libdir}/libkritaversion.so
+%{_libdir}/libkritawidgets.so
+%{_libdir}/libkritawidgetutils.so
+%{_includedir}/kis_qmic_interface.h
+%{_includedir}/kis_qmic_plugin_interface.h
+%{_includedir}/kritaqmicinterface_export.h
 
 %files data -f %{orgname}.lang
 %defattr(644,root,root,755)
