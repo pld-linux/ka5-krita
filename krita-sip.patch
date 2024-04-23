@@ -1,0 +1,11 @@
+--- krita-5.2.2/cmake/modules/pyproject.toml.in.orig	2023-12-06 12:38:26.000000000 +0100
++++ krita-5.2.2/cmake/modules/pyproject.toml.in	2024-04-23 17:54:56.023589343 +0200
+@@ -9,7 +9,7 @@ name = "@module_name_toml@"
+ sip-module = "@sip_name@"
+ sip-include-dirs = @sip_include_dirs@
+ sip-files-dir = "@module_srcs@"
+-abi-version = "12"
++abi-version = "12.14"
+ 
+ [tool.sip.bindings.@module_name_toml@]
+ tags = @module_tags@

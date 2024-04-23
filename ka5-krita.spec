@@ -1,3 +1,6 @@
+# TODO:
+# - KSeExpr 4.0.0.0 https://invent.kde.org/graphics/kseexpr
+# - system raqm (bundled, modified? version is used)
 %define		_state		stable
 %define		qt_ver		5.12.0
 %define		kf_ver		5.44.0
@@ -6,13 +9,14 @@
 Summary:	A digital painting application
 Summary(pl.UTF-8):	Aplikacja do rysunków cyfrowych
 Name:		ka5-krita
-Version:	5.1.5
-Release:	5
+Version:	5.2.2
+Release:	1
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
-# Source0-md5:	ad84f643ff5dea6e8bbf34cc3c904c83
-Patch0:		krita-exiv2.patch
+# Source0-md5:	9bd8f71c6effd6d2aadd3e787fae0f1b
+# keep in sync with required sip6 version
+Patch0:		krita-sip.patch
 URL:		https://www.krita.org/
 BuildRequires:	OpenColorIO-devel >= 1.1.1
 BuildRequires:	OpenEXR-devel
@@ -20,8 +24,6 @@ BuildRequires:	Qt5Concurrent-devel >= %{qt_ver}
 BuildRequires:	Qt5Core-devel >= %{qt_ver}
 BuildRequires:	Qt5DBus-devel >= %{qt_ver}
 BuildRequires:	Qt5Gui-devel >= %{qt_ver}
-BuildRequires:	Qt5Multimedia-devel >= %{qt_ver}
-BuildRequires:	Qt5Multimedia-devel >= %{qt_ver}
 BuildRequires:	Qt5Network-devel >= %{qt_ver}
 BuildRequires:	Qt5PrintSupport-devel >= %{qt_ver}
 BuildRequires:	Qt5Qml-devel >= %{qt_ver}
@@ -32,14 +34,21 @@ BuildRequires:	Qt5Test-devel >= %{qt_ver}
 BuildRequires:	Qt5Widgets-devel >= %{qt_ver}
 BuildRequires:	Qt5X11Extras-devel >= %{qt_ver}
 BuildRequires:	Qt5Xml-devel >= %{qt_ver}
-BuildRequires:	boost-devel >= 1.55
+BuildRequires:	SDL2-devel >= 2.0
+BuildRequires:	boost-devel >= 1.65
 BuildRequires:	cmake >= 3.16
-BuildRequires:	eigen3 >= 3.0
+BuildRequires:	eigen3 >= 3.3
 BuildRequires:	exiv2-devel >= 0.16
-BuildRequires:	fftw3-devel
+BuildRequires:	fftw3-devel >= 3
+BuildRequires:	fontconfig-devel >= 2.13.1
+BuildRequires:	freetype-devel >= 1:2.10.0
+BuildRequires:	fribidi-devel >= 1.0.6
 BuildRequires:	gettext-devel
 BuildRequires:	giflib-devel
 BuildRequires:	gsl-devel
+BuildRequires:	harfbuzz-devel >= 4.0.0
+BuildRequires:	immer-devel
+BuildRequires:	ka5-libkdcraw-devel >= 5.0.0
 BuildRequires:	kf5-extra-cmake-modules >= 5.22
 BuildRequires:	kf5-kcompletion-devel >= %{kf_ver}
 BuildRequires:	kf5-kconfig-devel >= %{kf_ver}
@@ -51,28 +60,38 @@ BuildRequires:	kf5-kitemmodels-devel >= %{kf_ver}
 BuildRequires:	kf5-kitemviews-devel >= %{kf_ver}
 BuildRequires:	kf5-kwidgetsaddons-devel >= %{kf_ver}
 BuildRequires:	kf5-kwindowsystem-devel >= %{kf_ver}
+BuildRequires:	lager-devel
 BuildRequires:	lcms2-devel >= 2.4
 BuildRequires:	libheif-devel >= 1.11.0
 BuildRequires:	libjpeg-turbo-devel >= 2.1.3
 BuildRequires:	libjxl-devel >= 0.7.0
 BuildRequires:	libmypaint-devel >= 1.4.0
-BuildRequires:	libpng-devel
+BuildRequires:	libpng-devel >= 1.2.6
 BuildRequires:	libraw-devel >= 0.16
-BuildRequires:	libstdc++-devel >= 6:5
+BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	libtiff-devel
+BuildRequires:	libunibreak-devel >= 5.0
 BuildRequires:	libwebp-devel >= 1.2.0
+BuildRequires:	mlt-devel >= 7
 BuildRequires:	ninja
 BuildRequires:	openjpeg2-devel >= 2.3.0
 BuildRequires:	pkgconfig
 BuildRequires:	poppler-qt5-devel
 BuildRequires:	python3-PyQt5 >= 5.6.0
-BuildRequires:	python3-devel >= 1:3.2
+BuildRequires:	python3-devel >= 1:3.8
+BuildRequires:	rpm-build >= 4.6
+BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRequires:	quazip-qt5-devel >= 0.6
 BuildRequires:	sip-PyQt5 >= 4.19.13
+# keep in sync with abi-version in -sip.patch (generated code must be compatible with sip.h taken from installed sip6 package)
+BuildRequires:	sip6 >= 6.8.0
 BuildRequires:	xorg-lib-libX11-devel
+BuildRequires:	xorg-lib-libXi-devel
 BuildRequires:	xsimd-devel >= 8.1.0
+BuildRequires:	xsimd-devel < 12
 BuildRequires:	xz
 BuildRequires:	zlib-devel
+BuildRequires:	zug-devel
 Requires:	%{name}-data = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -105,9 +124,9 @@ Pliki nagłówkowe bibliotek Krity.
 Summary:	Data files for Krita application
 Summary(pl.UTF-8):	Dane dla aplikacji Krita
 Group:		X11/Applications/Graphics
-BuildArch:	noarch
 Requires(post,postun):	desktop-file-utils
 Requires(post,postun):	shared-mime-info
+BuildArch:	noarch
 
 %description data
 Data files for Krita application.
@@ -122,13 +141,13 @@ Dane dla aplikacji Krita.
 %build
 %cmake -B build \
 	-G Ninja \
-	-DHTML_INSTALL_DIR=%{_kdedocdir} \
-	-DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-	-DENABLE_UPDATERS=OFF \
-	-DFETCH_TRANSLATIONS=OFF \
-	-DKRITA_ENABLE_PCH=OFF \
 	-DCMAKE_DISABLE_FIND_PACKAGE_KSeExpr=ON \
-	-DCMAKE_DISABLE_FIND_PACKAGE_xsimd=ON
+	-DCMAKE_DISABLE_FIND_PACKAGE_xsimd=ON \
+	-DENABLE_UPDATERS=OFF \
+	-DKDE_INSTALL_DOCBUNDLEDIR=%{_kdedocdir} \
+	-DKDE_INSTALL_SYSCONFDIR=%{_sysconfdir} \
+	-DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+	-DKRITA_ENABLE_PCH=OFF
 
 %ninja_build -C build
 
@@ -160,61 +179,63 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/krita_version
 %attr(755,root,root) %{_bindir}/kritarunner
 %attr(755,root,root) %{_libdir}/libkritabasicflakes.so.*.*.*
-%ghost %{_libdir}/libkritabasicflakes.so.18
+%ghost %{_libdir}/libkritabasicflakes.so.19
 %attr(755,root,root) %{_libdir}/libkritacolor.so.*.*.*
-%ghost %{_libdir}/libkritacolor.so.18
+%ghost %{_libdir}/libkritacolor.so.19
 %attr(755,root,root) %{_libdir}/libkritacolord.so.*.*.*
-%ghost %{_libdir}/libkritacolord.so.18
+%ghost %{_libdir}/libkritacolord.so.19
 %attr(755,root,root) %{_libdir}/libkritacommand.so.*.*.*
-%ghost %{_libdir}/libkritacommand.so.18
+%ghost %{_libdir}/libkritacommand.so.19
 %attr(755,root,root) %{_libdir}/libkritaexifcommon.so.*.*.*
-%ghost %{_libdir}/libkritaexifcommon.so.18
+%ghost %{_libdir}/libkritaexifcommon.so.19
 %attr(755,root,root) %{_libdir}/libkritaflake.so.*.*.*
-%ghost %{_libdir}/libkritaflake.so.18
+%ghost %{_libdir}/libkritaflake.so.19
 %attr(755,root,root) %{_libdir}/libkritaglobal.so.*.*.*
-%ghost %{_libdir}/libkritaglobal.so.18
+%ghost %{_libdir}/libkritaglobal.so.19
 %attr(755,root,root) %{_libdir}/libkritaimage.so.*.*.*
-%ghost %{_libdir}/libkritaimage.so.18
+%ghost %{_libdir}/libkritaimage.so.19
 %attr(755,root,root) %{_libdir}/libkritaimpex.so.*.*.*
-%ghost %{_libdir}/libkritaimpex.so.18
+%ghost %{_libdir}/libkritaimpex.so.19
 %attr(755,root,root) %{_libdir}/libkritalibbrush.so.*.*.*
-%ghost %{_libdir}/libkritalibbrush.so.18
+%ghost %{_libdir}/libkritalibbrush.so.19
 %attr(755,root,root) %{_libdir}/libkritalibkis.so.*.*.*
-%ghost %{_libdir}/libkritalibkis.so.18
+%ghost %{_libdir}/libkritalibkis.so.19
 %attr(755,root,root) %{_libdir}/libkritalibkra.so.*.*.*
-%ghost %{_libdir}/libkritalibkra.so.18
+%ghost %{_libdir}/libkritalibkra.so.19
 %attr(755,root,root) %{_libdir}/libkritalibpaintop.so.*.*.*
-%ghost %{_libdir}/libkritalibpaintop.so.18
+%ghost %{_libdir}/libkritalibpaintop.so.19
 %attr(755,root,root) %{_libdir}/libkritametadata.so.*.*.*
-%ghost %{_libdir}/libkritametadata.so.18
+%ghost %{_libdir}/libkritametadata.so.19
+%attr(755,root,root) %{_libdir}/libkritamultiarch.so.*.*.*
+%ghost %{_libdir}/libkritamultiarch.so.19
 %attr(755,root,root) %{_libdir}/libkritapigment.so.*.*.*
-%ghost %{_libdir}/libkritapigment.so.18
+%ghost %{_libdir}/libkritapigment.so.19
 %attr(755,root,root) %{_libdir}/libkritaplugin.so.*.*.*
-%ghost %{_libdir}/libkritaplugin.so.18
+%ghost %{_libdir}/libkritaplugin.so.19
 %attr(755,root,root) %{_libdir}/libkritapsd.so.*.*.*
-%ghost %{_libdir}/libkritapsd.so.18
+%ghost %{_libdir}/libkritapsd.so.19
 %attr(755,root,root) %{_libdir}/libkritapsdutils.so.*.*.*
-%ghost %{_libdir}/libkritapsdutils.so.18
+%ghost %{_libdir}/libkritapsdutils.so.19
 %attr(755,root,root) %{_libdir}/libkritaqmicinterface.so.*.*.*
-%ghost %{_libdir}/libkritaqmicinterface.so.18
+%ghost %{_libdir}/libkritaqmicinterface.so.19
 %attr(755,root,root) %{_libdir}/libkritaqml.so.*.*.*
-%ghost %{_libdir}/libkritaqml.so.18
+%ghost %{_libdir}/libkritaqml.so.19
 %attr(755,root,root) %{_libdir}/libkritaresources.so.*.*.*
-%ghost %{_libdir}/libkritaresources.so.18
+%ghost %{_libdir}/libkritaresources.so.19
 %attr(755,root,root) %{_libdir}/libkritaresourcewidgets.so.*.*.*
-%ghost %{_libdir}/libkritaresourcewidgets.so.18
+%ghost %{_libdir}/libkritaresourcewidgets.so.19
 %attr(755,root,root) %{_libdir}/libkritastore.so.*.*.*
-%ghost %{_libdir}/libkritastore.so.18
+%ghost %{_libdir}/libkritastore.so.19
 %attr(755,root,root) %{_libdir}/libkritatiffpsd.so.*.*.*
-%ghost %{_libdir}/libkritatiffpsd.so.18
+%ghost %{_libdir}/libkritatiffpsd.so.19
 %attr(755,root,root) %{_libdir}/libkritaui.so.*.*.*
-%ghost %{_libdir}/libkritaui.so.18
+%ghost %{_libdir}/libkritaui.so.19
 %attr(755,root,root) %{_libdir}/libkritaversion.so.*.*.*
-%ghost %{_libdir}/libkritaversion.so.18
+%ghost %{_libdir}/libkritaversion.so.19
 %attr(755,root,root) %{_libdir}/libkritawidgets.so.*.*.*
-%ghost %{_libdir}/libkritawidgets.so.18
+%ghost %{_libdir}/libkritawidgets.so.19
 %attr(755,root,root) %{_libdir}/libkritawidgetutils.so.*.*.*
-%ghost %{_libdir}/libkritawidgetutils.so.18
+%ghost %{_libdir}/libkritawidgetutils.so.19
 %dir %{_libdir}/krita-python-libs
 %dir %{_libdir}/krita-python-libs/PyKrita
 %attr(755,root,root) %{_libdir}/krita-python-libs/PyKrita/krita.so
@@ -336,10 +357,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kritaplugins/kritaraindropsfilter.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritarandompickfilter.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritarecorderdocker.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritaresettransparent.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritaresourcemanager.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritarotateimage.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritaroundcornersfilter.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritaroundmarkerpaintop.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritasamplescreencolor.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritascreentonegenerator.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritaselectiontools.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritaseparatechannels.so
@@ -376,6 +399,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kritaplugins/kritawaveletdecompose.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritawebpexport.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritawebpimport.so
+%attr(755,root,root) %{_libdir}/kritaplugins/kritawgcolorselector.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritaxcfimport.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritaxmp.so
 %dir %{_libdir}/qt5/qml/org/krita
@@ -406,6 +430,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libkritalibkra.so
 %{_libdir}/libkritalibpaintop.so
 %{_libdir}/libkritametadata.so
+%{_libdir}/libkritamultiarch.so
 %{_libdir}/libkritapigment.so
 %{_libdir}/libkritaplugin.so
 %{_libdir}/libkritapsd.so
