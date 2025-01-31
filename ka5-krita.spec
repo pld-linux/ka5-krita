@@ -10,7 +10,7 @@ Summary:	A digital painting application
 Summary(pl.UTF-8):	Aplikacja do rysunków cyfrowych
 Name:		ka5-krita
 Version:	5.2.2
-Release:	4
+Release:	5
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
@@ -79,17 +79,17 @@ BuildRequires:	openjpeg2-devel >= 2.3.0
 BuildRequires:	pkgconfig
 BuildRequires:	poppler-qt5-devel
 BuildRequires:	python3-PyQt5 >= 5.6.0
+BuildRequires:	python3-PyQt5-devel >= 4.19.13
 BuildRequires:	python3-devel >= 1:3.8
+BuildRequires:	quazip-qt5-devel >= 0.6
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.605
-BuildRequires:	quazip-qt5-devel >= 0.6
-BuildRequires:	sip-PyQt5 >= 4.19.13
 # keep in sync with abi-version in -sip.patch (generated code must be compatible with sip.h taken from installed sip6 package)
 BuildRequires:	sip6 >= 6.8.0
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXi-devel
-BuildRequires:	xsimd-devel >= 8.1.0
 BuildRequires:	xsimd-devel < 12
+BuildRequires:	xsimd-devel >= 8.1.0
 BuildRequires:	xz
 BuildRequires:	zlib-devel
 BuildRequires:	zug-devel
@@ -137,8 +137,8 @@ Dane dla aplikacji Krita.
 
 %prep
 %setup -q -n %{orgname}-%{version}
-%patch0 -p1
-%patch1 -p1
+%patch -P 0 -p1
+%patch -P 1 -p1
 
 %build
 %cmake -B build \
