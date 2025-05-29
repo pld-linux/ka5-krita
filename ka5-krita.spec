@@ -218,8 +218,6 @@ rm -rf $RPM_BUILD_ROOT
 %ghost %{_libdir}/libkritapsdutils.so.19
 %attr(755,root,root) %{_libdir}/libkritaqmicinterface.so.*.*.*
 %ghost %{_libdir}/libkritaqmicinterface.so.19
-%attr(755,root,root) %{_libdir}/libkritaqml.so.*.*.*
-%ghost %{_libdir}/libkritaqml.so.19
 %attr(755,root,root) %{_libdir}/libkritaresources.so.*.*.*
 %ghost %{_libdir}/libkritaresources.so.19
 %attr(755,root,root) %{_libdir}/libkritaresourcewidgets.so.*.*.*
@@ -238,6 +236,7 @@ rm -rf $RPM_BUILD_ROOT
 %ghost %{_libdir}/libkritawidgetutils.so.19
 %dir %{_libdir}/krita-python-libs
 %dir %{_libdir}/krita-python-libs/PyKrita
+%{_libdir}/krita-python-libs/PyKrita/krita.pyi
 %attr(755,root,root) %{_libdir}/krita-python-libs/PyKrita/krita.so
 %{_libdir}/krita-python-libs/krita
 %dir %{_libdir}/kritaplugins
@@ -402,17 +401,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kritaplugins/kritawgcolorselector.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritaxcfimport.so
 %attr(755,root,root) %{_libdir}/kritaplugins/kritaxmp.so
-%dir %{_libdir}/qt5/qml/org/krita
-%dir %{_libdir}/qt5/qml/org/krita/draganddrop
-%{_libdir}/qt5/qml/org/krita/draganddrop/libdraganddropplugin.so
-%{_libdir}/qt5/qml/org/krita/draganddrop/qmldir
-%dir %{_libdir}/qt5/qml/org/krita/sketch
-%dir %{_libdir}/qt5/qml/org/krita/sketch/components
-%{_libdir}/qt5/qml/org/krita/sketch/components/*.js
-%{_libdir}/qt5/qml/org/krita/sketch/components/*.qml
-%{_libdir}/qt5/qml/org/krita/sketch/components/qmldir
-%attr(755,root,root) %{_libdir}/qt5/qml/org/krita/sketch/libkritasketchplugin.so
-%{_libdir}/qt5/qml/org/krita/sketch/qmldir
 
 %files devel
 %defattr(644,root,root,755)
@@ -436,7 +424,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libkritapsd.so
 %{_libdir}/libkritapsdutils.so
 %{_libdir}/libkritaqmicinterface.so
-%{_libdir}/libkritaqml.so
 %{_libdir}/libkritaresources.so
 %{_libdir}/libkritaresourcewidgets.so
 %{_libdir}/libkritastore.so
