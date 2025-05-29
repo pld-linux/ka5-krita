@@ -8,4 +8,4 @@
 +abi-version = "12.14"
  
  [tool.sip.bindings.@module_name_toml@]
- tags = @module_tags@
+ pep484-pyi = true

@@ -9,15 +9,14 @@
 Summary:	A digital painting application
 Summary(pl.UTF-8):	Aplikacja do rysunków cyfrowych
 Name:		ka5-krita
-Version:	5.2.2
-Release:	7
+Version:	5.2.9
+Release:	1
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
-# Source0-md5:	9bd8f71c6effd6d2aadd3e787fae0f1b
+# Source0-md5:	efd0579b882e00af82d2464ce3c87bfc
 # keep in sync with required sip6 version
 Patch0:		krita-sip.patch
-Patch1:		krita-libjxl.patch
 URL:		https://www.krita.org/
 BuildRequires:	OpenColorIO-devel >= 1.1.1
 BuildRequires:	OpenEXR-devel
@@ -88,7 +87,7 @@ BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRequires:	sip6 >= 6.8.0
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXi-devel
-BuildRequires:	xsimd-devel < 12
+BuildRequires:	xsimd-devel < 14
 BuildRequires:	xsimd-devel >= 8.1.0
 BuildRequires:	xz
 BuildRequires:	zlib-devel
@@ -138,7 +137,6 @@ Dane dla aplikacji Krita.
 %prep
 %setup -q -n %{orgname}-%{version}
 %patch -P 0 -p1
-%patch -P 1 -p1
 
 %build
 %cmake -B build \
