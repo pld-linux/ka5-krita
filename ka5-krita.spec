@@ -67,6 +67,7 @@ BuildRequires:	libjpeg-turbo-devel >= 2.1.3
 BuildRequires:	libjxl-devel >= 0.9.0
 BuildRequires:	libmypaint-devel >= 1.4.0
 BuildRequires:	libpng-devel >= 1.2.6
+BuildRequires:	libquadmath-devel
 BuildRequires:	libraw-devel >= 0.16
 BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	libtiff-devel
