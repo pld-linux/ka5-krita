@@ -9,12 +9,12 @@
 Summary:	A digital painting application
 Summary(pl.UTF-8):	Aplikacja do rysunków cyfrowych
 Name:		ka5-krita
-Version:	5.2.9
-Release:	5
+Version:	5.2.13
+Release:	1
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
-# Source0-md5:	efd0579b882e00af82d2464ce3c87bfc
+# Source0-md5:	e1aa43c484c94f5bc044e6f5450efa51
 # keep in sync with required sip6 version
 Patch0:		krita-sip.patch
 URL:		https://www.krita.org/
