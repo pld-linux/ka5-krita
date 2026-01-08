@@ -9,12 +9,12 @@
 Summary:	A digital painting application
 Summary(pl.UTF-8):	Aplikacja do rysunków cyfrowych
 Name:		ka5-krita
-Version:	5.2.13
+Version:	5.2.14
 Release:	1
 License:	GPL v3+
 Group:		X11/Applications/Graphics
 Source0:	https://download.kde.org/%{_state}/krita/%{version}/%{orgname}-%{version}.tar.xz
-# Source0-md5:	e1aa43c484c94f5bc044e6f5450efa51
+# Source0-md5:	e293867c64275f65d994d092930ee77a
 # keep in sync with required sip6 version
 Patch0:		krita-sip.patch
 URL:		https://www.krita.org/
@@ -85,7 +85,7 @@ BuildRequires:	quazip-qt5-devel >= 0.6
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.605
 # keep in sync with abi-version in -sip.patch (generated code must be compatible with sip.h taken from installed sip6 package)
-BuildRequires:	sip6 >= 6.8.0
+BuildRequires:	sip6 >= 6.15.1
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXi-devel
 BuildRequires:	xsimd-devel < 14
